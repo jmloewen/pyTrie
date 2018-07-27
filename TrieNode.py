@@ -1,9 +1,3 @@
-#This Python implementation of a Trie is made to store items at the end of each Trie branch.
-#Primary usage is to convert dictionary key value pairs into a Trie structure.
-#Cannot currently handle multiple equal keys.  New key will overwrite the old, as is.
-#Current implementation of the descendant "trie" nodes creates a dictionary to be filled with single-letter
-#KVP's, rather than allocate 26 arrays filled with None.  Will implement alternative for arrays rather than dictsself.
-
 class TrieNode(object):
     #A=0, B=1, .... Z = 25.
     def __init__(self, letter, parent=None):
@@ -29,7 +23,7 @@ class TrieNode(object):
                 self.addWord(key, d[key])
 
     #Word will be sent in via Text.  Letter on the node should be it's whole letter self.
-    def addWord(self, word, payload):
+    def addWord(self, word, payload=None):
         node = self
         word = word.upper()
         #Traverse through the word until all letters are nodes.
@@ -100,7 +94,6 @@ class TrieNode(object):
 
     #A work in progress.  Print the keys in this trie, top down.
     def printWordsInTrie(self):
-
         for indexNode in self.arr.keys():
             child = self.arr[indexNode]
             if child:
@@ -123,6 +116,7 @@ if __name__ == "__main__":
     node.addWord("Alberta", "province")
     node.addWord("alpaca", "llama")
     node.addWord("antigua", "barbuda")
+    node.addWord("alibaba")
     #printWordsInTrie(node)
     #print(node.findPayload("antigua"))
 
