@@ -47,67 +47,41 @@ class TrieNode(object):
         node.payload = payload
         node.isEnd = True
 
+    #removeNode
     def removeNode(self):
-        #If we're calling this, we want to remove the node.
         if self.parent:
             val = ord(self.letter) - 65
-            self.parent.arr[val] = None
-
+            self.parent.arr.pop(val)
+        self.cleanNode()
         self.arr = {}
+        self.isEnd = False
 
-        return self.payload
-        '''
-    #In: A word to remove from this trienode.
+    def cleanNode(self):
+        self.isEnd = False
+        self.payload = None
+
+    #want to check from the last letter up whether or not we should remove this letter
+    #if any letter down the chain isn't removed, we don't want to remove the preceding one.
     def removeWord(self, word):
-        removed = False
-        #Dig to the end of the word, remove on our way back up
-        if len(word) == 1:
-            #if more than 1 child, then don't delete the node.
-            if len(self.arr.keys()) > 1:
-                self.payload = None
-                self.isEnd = False
-                return False
-            #Remove this node
-            else:
-                self.removeNode()
-                return True
+        node = self
+        word = word.upper()
+
+        i = 0
+        #Traverse down to the last letter, then walk back up to the parent.
+        while node and i < len(word):
+            node = node.arr.get(ord(word[i]) - 65)
+            i += 1
+
+        #There must be a more pythonic way to do this
+        if len(node.arr.keys()) > 0:
+            node.cleanNode()
         else:
-            removed = self.removeWord(word[1:])
-            #If the letter after this was removed, consider removing this node.
-            if removed:
-                #Stop here if there wouldbe other keys removed.
-                if len(self.arr.keys()) > 1:
-                    return False
-                else:
-                    self.removeNode()
-                    return True
-            #If the next letter wasn't removed, it was part of a different trie.  this shouldn't be removed.
-            else:
-                return False
-
-        #Continue removal here.
+            while len(node.arr.keys()) == 0:
+                node.removeNode()
+                node = node.parent
+                removed = True
 
 
-        #Removenode should only remove this node.  Recursion should be handled by the calling function
-        #Cases:
-        #1. Leaf node
-            #Remove data in node, shouldn't need to be more complex than del?
-                #What about if there is a nested node beneath this?  Does it get removed by del?
-            #Remove node itself, Proceed to parent.
-        #2. Branch node above a Leaf
-            #Check if it has children other than the one that was just removed
-            #if so, do not remove, stop here, return True or Word+payload
-            #if not, remove self, proceed to parent.
-        #3. Root
-            #Check if it has children other than the one that was just removeNod
-                #If so, do not remove, return True or Word+payload
-                #if not, remove node, return True or Word + Payload.
-
-
-        #On return to removeWord, gc.collect()
-
-    #Return the payload of the given Trie with the given key, if it exists.
-    '''
     def findPayload(self, key):
         node = self
         key = key.upper()
@@ -123,17 +97,21 @@ class TrieNode(object):
 
     #A work in progress.  Print the keys in this trie, top down.
     def printWordsInTrie(self):
+
         for indexNode in self.arr.keys():
             child = self.arr[indexNode]
-            if not child.isEnd:
-                print(child.letter, end="")
-                child.printWordsInTrie()
-            else:
-                print(self.arr[indexNode].letter)
-                if type(child.payload) is TrieNode:
+            if child:
+                if not child.isEnd:
+                    print(child.letter, end="")
                     child.printWordsInTrie()
                 else:
-                    print(child.payload)
+                    print(self.arr[indexNode].letter)
+                    if type(child.payload) is TrieNode:
+                        child.printWordsInTrie()
+                    else:
+                        print(child.payload)
+            else:
+                print("We shouldn't get here.  indexNode: ", indexNode)
 
 #Need some init function, why not main?
 if __name__ == "__main__":
