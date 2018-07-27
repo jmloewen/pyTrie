@@ -67,20 +67,23 @@ class TrieNode(object):
         word = word.upper()
 
         i = 0
+
         #Traverse down to the last letter, then walk back up to the parent.
         while node and i < len(word):
             node = node.arr.get(ord(word[i]) - 65)
             i += 1
 
-        #There must be a more pythonic way to do this
-        if len(node.arr.keys()) > 0:
-            node.cleanNode()
-        else:
-            while len(node.arr.keys()) == 0:
-                node.removeNode()
-                node = node.parent
-                removed = True
-
+        if node:
+            #There must be a more pythonic way to do this
+            if len(node.arr.keys()) > 0:
+                node.cleanNode()
+            else:
+                while len(node.arr.keys()) == 0:
+                    node.removeNode()
+                    node = node.parent
+                    removed = True
+            return True
+        return False
 
     def findPayload(self, key):
         node = self
