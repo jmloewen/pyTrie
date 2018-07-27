@@ -1,15 +1,19 @@
 class TrieNode(object):
     #A=0, B=1, .... Z = 25.
-    def __init__(self, letter, parent=None):
+    def __init__(self, letter, isDict=True, parent=None):
         self.letter = letter
-        self.arr = {}
+
+        if isDict:
+            self.arr = {}
+        else:
+            self.arr = []
+
         self.payload = None
         self.isEnd = False
         self.parent = parent
 
     #This takes in a dictionary and appends its KVP to this Trie.
     def addDict(self, d):
-        #dictTrie = TrieNode("*")
         #In this context, key is key, d[key] is payload.
         #For every key in this dictionary, I add its key to the trie node, and the value as the end payload
         for key in d.keys():
@@ -36,7 +40,9 @@ class TrieNode(object):
             else:
                 newNode = TrieNode(letter, node)
                 node.arr[letterVal] = newNode
+                newNode.parent = node
                 node = newNode
+
         #Mark the end of this word and append the payload.
         node.payload = payload
         node.isEnd = True
@@ -64,15 +70,19 @@ class TrieNode(object):
 
         #Traverse down to the last letter, then walk back up to the parent.
         while node and i < len(word):
+            #print("Letter:", node.letter)
             node = node.arr.get(ord(word[i]) - 65)
             i += 1
+        #print("Letter:", node.letter)
 
-        if node:
+        if node:#If not node, we were given an invalid word to remove
             #There must be a more pythonic way to do this
             if len(node.arr.keys()) > 0:
                 node.cleanNode()
             else:
-                while len(node.arr.keys()) == 0:
+                while node and len(node.arr.keys()) == 0:
+                    #print("Node letter:", node.letter)
+                    #print("Node Parent: ", node.parent)
                     node.removeNode()
                     node = node.parent
                     removed = True
@@ -116,7 +126,7 @@ if __name__ == "__main__":
     node.addWord("Alberta", "province")
     node.addWord("alpaca", "llama")
     node.addWord("antigua", "barbuda")
-    node.addWord("alibaba")
+    #node.addWord("alibaba")
     #printWordsInTrie(node)
     #print(node.findPayload("antigua"))
 
