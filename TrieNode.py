@@ -1,8 +1,9 @@
 class TrieNode(object):
     #A=0, B=1, .... Z = 25.
-    def __init__(self, letter, parent=None):
+    def __init__(self, letter, parent=None, caseSensitive = False):
         self.letter = letter
         self.arr = {}
+        self.caseSensitive = caseSensitive
         self.payload = None
         self.isEnd = False
         self.parent = parent
@@ -21,18 +22,18 @@ class TrieNode(object):
     # Add a key value pair or a word to the Trie.
     def addWord(self, word, payload=None):
         node = self
-        word = word.upper()
+        if not self.caseSensitive:
+            word = word.upper()
+
 
         #Traverse through the word until all letters are nodes
         for letter in word:
-            letterVal = ord(letter) - 65
-
             #If node is in, traverse.  Else, add the node.
-            if node.arr.get(letterVal, None):
-                node = node.arr[letterVal]
+            if node.arr.get(letter):
+                node = node.arr[letter]
             else:
                 newNode = TrieNode(letter, node)
-                node.arr[letterVal] = newNode
+                node.arr[letter] = newNode
                 newNode.parent = node
                 node = newNode
 
@@ -43,8 +44,7 @@ class TrieNode(object):
     #Remove this node from the Trie, don't remove *
     def removeNode(self):
         if self.parent:
-            val = ord(self.letter) - 65
-            self.parent.arr.pop(val)
+            self.parent.arr.pop(self.letter)
         self.cleanNode()
         self.arr = {}
         self.isEnd = False
@@ -57,12 +57,13 @@ class TrieNode(object):
     #Remove a given word from the Trie
     def removeWord(self, word):
         node = self
-        word = word.upper()
+        if not self.caseSensitive:
+            word = word.upper()
         i = 0
 
         #Traverse down to the last letter, then walk back up to the parent.
         while node and i < len(word):
-            node = node.arr.get(ord(word[i]) - 65)
+            node = node.arr.get(letter)
             i += 1
 
         if node:#If not node, we were given an invalid word to remove
@@ -79,10 +80,11 @@ class TrieNode(object):
 
     def findPayload(self, key):
         node = self
-        key = key.upper()
+        if not self.caseSensitive:
+            key = key.upper()
         for letter in key:
-            keyVal = ord(letter) - 65
-            if node.arr.get(keyVal, None):
+            keyVal = letter
+            if node.arr.get(keyVal):
                 node = node.arr[keyVal]
             else:
                 return None
@@ -141,9 +143,11 @@ if __name__ == "__main__":
 
     #print(tempNode.buildWord())
 
-    trieDict = node.findPayload("abc")
-    print(trieDict.trieToDict())
+    trieDict = node.findPayload("ard")
+    #print(trieDict.trieToDict())
     print(node.trieToDict())
+
+    print(node.arr['A'].arr)
     #print(trieDict["ABC"]["ARD"])
     #print(node.trieToDict())
     #print(innerTrie.findPayload("ard"))

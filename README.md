@@ -15,6 +15,7 @@ Feature Goals:
 -Faster export function (current is slow)
 -Include ability to parse through dicts nested in arrays, arrays nested in arrays.
 -Include Array as alternative to dictionary
+-Remove Dict from TrieNode
   -Include ability to export as Array
 -Maybe's:
   -Allowance for duplicate values within a single key?
