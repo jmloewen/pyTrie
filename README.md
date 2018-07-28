@@ -1,5 +1,23 @@
-#This Python implementation of a Trie is made to store items at the end of each Trie branch.
-#Primary usage is to convert dictionary key value pairs into a Trie structure.
-#Cannot currently handle multiple equal keys.  New key will overwrite the old, as is.
-#Current implementation of the descendant "trie" nodes creates a dictionary to be filled with single-letter
-#KVP's, rather than allocate 26 arrays filled with None.  Will implement alternative for arrays rather than dictsself.
+This is a Python3 implementation of a Trie, using Dictionaries.
+
+End goal is the ability to be compliant with JSON standard.
+
+Features:
+  Import Dictionary to TrieNode
+  Import Words & Payloads to TrieNode
+  Remove Words from TrieNode
+  Export TrieNode as Dictionary
+  Return Value in Trie given Key
+
+Feature Goals:
+-Full test suite
+-Print entire Trie given a child node
+-Faster export function (current is slow)
+-Include ability to parse through dicts nested in arrays, arrays nested in arrays.
+-Include Array as alternative to dictionary
+  -Include ability to export as Array
+-Maybe's:
+  -Allowance for duplicate values within a single key?
+  -Case Sensitivity in letters?  Is this something that should be added?
+Goal:
+-Compliance with JSON standard - should be able to import JSON dictionary, add values to it, and export as a new JSON dictionary

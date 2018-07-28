@@ -54,12 +54,10 @@ class TrieNode(object):
         self.isEnd = False
         self.payload = None
 
-
     #Remove a given word from the Trie
     def removeWord(self, word):
         node = self
         word = word.upper()
-
         i = 0
 
         #Traverse down to the last letter, then walk back up to the parent.
@@ -92,15 +90,16 @@ class TrieNode(object):
             return node.payload
         return None
 
-    def buildWordFromEnd(self, partial=""):
+    #Given a node, return its word.
+    def buildWord(self, partial=""):
         if self.parent:
             partial = self.letter + partial
-            return self.parent.buildWordFromEnd(partial)
+            return self.parent.buildWord(partial)
         else:
             return partial
 
     #return the trie structure from this point as a python dictionary.
-    #TODO: O(2N).  Can be improved.
+    #TODO: O(N^2) ish.  Can be improved to O(N)
     def trieToDict(self, newDict={}):
         node = self
         #For all keys at this level
@@ -110,52 +109,13 @@ class TrieNode(object):
             if cur.isEnd:
                 if type(cur.payload) is TrieNode:
                     payloadDict = cur.payload.trieToDict()
-                    newDict[cur.buildWordFromEnd()] = payloadDict
+                    newDict[cur.buildWord()] = payloadDict
                 else:
-                    newDict[cur.buildWordFromEnd()] = cur.payload
+                    newDict[cur.buildWord()] = cur.payload
 
             cur.trieToDict(newDict)
         return newDict
-        #Do O(2N) solution first
-        #Traverse down to each isEnd, ascend back up
 
-
-            #For every key on this level, we have some preceding string that is identical to the
-                #other keys on this level
-            #for every key:
-                #If it would end the string
-                    #If it has no children, we append the string to our list
-                    #If it has children, we append the string to our list and make a copy of it
-                    #This copy continues to be built downwards
-                #else it would not end the string.
-                    #a copy of the string must exist to this point for every child node
-                    #make copies if necessary
-        #keys.append(key)
-
-
-'''
-    #A work in progress.  Print the keys in this trie, top down.
-    #Currently does not print each word, prints all letters in each trie branch.
-    def printWordsInTrie(self):
-        letters = []
-        for indexNode in self.arr.keys():
-            child = self.arr[indexNode]
-            if child:
-                if not child.isEnd:
-                    for cl in child.printWordsInTrie():
-                        letters.append(child.letter + cl)
-                else:
-                    letters.append(child.letter)
-                    if type(child.payload) is TrieNode:
-                        #print(child.payload)
-                        #letters.append(child.payload.printWordsInTrie())
-                        pass
-                    else:
-                        letters.append(child.payload)
-            else:
-                print("We shouldn't get here.  indexNode: ", indexNode)
-        return letters
-'''
 #Need some init function, why not main?
 if __name__ == "__main__":
     node = TrieNode("*")
@@ -179,7 +139,7 @@ if __name__ == "__main__":
 
     #tempNode = node.arr[0].arr[1].arr[2]
 
-    #print(tempNode.buildWordFromEnd())
+    #print(tempNode.buildWord())
 
     trieDict = node.findPayload("abc")
     print(trieDict.trieToDict())
