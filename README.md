@@ -2,11 +2,11 @@ This is a Python3 implementation of a Trie, using Dictionaries.
 
 
 ## Features:
-* insert a Dictionary into TrieNode.
-* insert Words & Payloads to TrieNode.
-* remove Words from TrieNode.
-* export TrieNode as Dictionary.
-* Return Value in Trie given Key.
+* insert a dictionary into TrieNode.
+* insert words & payloads to TrieNode.
+* remove words from TrieNode.
+* export TrieNode as dictionary.
+* return value in Trie given key.
 
 ## Future Feature Goals:
 * Full test suite.
@@ -14,10 +14,10 @@ This is a Python3 implementation of a Trie, using Dictionaries.
 * Faster export function (current implementation is slow).
 * Include ability to parse through dicts nested in arrays, arrays nested in arrays.
 * Include Array as alternative to dictionary.
-  * Include ability to export as Array.
+  * Include ability to export as an array.
 * Potential Goals:
   * Allowance for duplicate values within a single key.
-  * Case Sensitivity in letters.
+  * Case sensitivity in letters.
 
 ## End Goal:
 * Compliance with JSON standard 
